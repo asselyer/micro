@@ -7,28 +7,13 @@ from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 
-
-def home(request):
-    data = User.objects.all()
-
-    return render(request, 'index.html', {'data': data,})
-
-class UserList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    # template_name = 'api/index.html'
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super(UserList, self).get_context_data(**kwargs)
-        # Create any data and add it to the context
-        context['some_data'] = 'This is just some data'
-        return context
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from api.models import Category, Product, Order
+from api.serializers import CategorySerializer2, ProductSerializer, OrderSerializer, OrderSerializer1
 
 @api_view(['POST'])
 def login(request):
@@ -37,9 +22,81 @@ def login(request):
     user = serializer.validated_data['user']
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key})
-
+    
 
 @api_view(['POST'])
 def logout(request):
     request.auth.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CategoryList(generics.ListCreateAPIView):
+    # queryset = Category.objects.all()
+    # serializer_class = CategorySerializer2
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        return Category.objects.for_user(self.request.user)
+
+    def get_serializer_class(self):
+        return CategorySerializer2
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+
+class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer2
+
+def home(request):
+    data = User.objects.all()
+    data1 = Product.objects.all()
+
+    return render(request, 'index.html', {'data': data, 'data1':data1})
+
+def category_product(request, pk):
+    try:
+        category = Category.objects.get(id=pk)
+    except Category.DoesNotExist as e:
+        return JsonResponse({'error': str(e)})
+
+    products = category.product_set.all()
+    serializer = ProductSerializer(products, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+class ProductList(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class OrderList(generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderPay(generics.UpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer1
+
+class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    # def get_context_data(self, **kwargs):
+       
+    #     context = super(UserList, self).get_context_data(**kwargs)
+      
+    #     context['some_data'] = 'This is just some data'
+    #     return context
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+

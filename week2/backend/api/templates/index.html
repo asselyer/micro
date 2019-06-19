@@ -9,5 +9,14 @@
         </li>
       {% endfor %}
     </ul>
+    <h1>Product List</h1>
+
+    <ul>
+      {% for pr in data1 %}
+        <li>
+          {{ pr.name }} + {{pr.price}}тг</a> 
+        </li>
+      {% endfor %}
+    </ul>
       
 {% endblock %}
