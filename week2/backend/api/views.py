@@ -8,7 +8,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.renderers import TemplateHTMLRenderer
+from django.shortcuts import get_object_or_404
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +24,7 @@ def login(request):
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key})
     
+
 
 @api_view(['POST'])
 def logout(request):
@@ -65,8 +67,9 @@ def doc(request):
     return render(request, 'doc.html')
 def shop(request):
     permission_classes = (IsAuthenticated, )
-    data1 = Product.objects.all()
-    return render(request, 'shop.html')
+    data3 = Category.objects.all()
+    data2 = Product.objects.all()
+    return render(request, 'shop.html', {'data3': data3, 'data2': data2  })
 
 def category_product(request, pk):
     permission_classes = (IsAuthenticated, )
@@ -103,6 +106,17 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated, )
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'shop.html'
+
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        serializer = OrderSerializer(order, data=request.data)
+        if not serializer.is_valid():
+            return Response({'serializer': serializer, 'order': order})
+        serializer.save()
+        return redirect('order')
+
 
 class UserList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated, )

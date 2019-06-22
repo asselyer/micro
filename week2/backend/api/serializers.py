@@ -81,3 +81,4 @@ class OrderSerializer1(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('id', 'payment_type')
+
