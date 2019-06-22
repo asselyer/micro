@@ -13,7 +13,9 @@ urlpatterns = [
     path('order/', views.OrderList.as_view()),
     path('order/<int:pk>/pay', views.OrderPay.as_view()),
     path('order/<int:pk>/', views.OrderDetail.as_view()),
-    
+    path('intro/', views.intro),
+    path('doc/', views.doc),
+    path('shop/', views.shop),
     path('login/', views.login),
     path('logout/', views.logout),
 

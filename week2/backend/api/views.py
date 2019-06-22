@@ -54,8 +54,19 @@ def home(request):
     permission_classes = (IsAuthenticated, )
     data = User.objects.all()
     data1 = Product.objects.all()
+    data2=Order.objects.all()
 
-    return render(request, 'index.html', {'data': data, 'data1':data1})
+    return render(request, 'index.html', {'data': data, 'data1':data1, 'data2':data2})
+def intro(request):
+    permission_classes = (IsAuthenticated, )
+    return render(request, 'intro.html')
+def doc(request):
+    permission_classes = (IsAuthenticated, )
+    return render(request, 'doc.html')
+def shop(request):
+    permission_classes = (IsAuthenticated, )
+    data1 = Product.objects.all()
+    return render(request, 'shop.html')
 
 def category_product(request, pk):
     permission_classes = (IsAuthenticated, )

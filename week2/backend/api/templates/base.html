@@ -3,15 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Microservices</title>
+    <!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.2/css/mdb.min.css" rel="stylesheet">
 </head>
 <body>
+<!--Main Navigation-->
+<header>
 
-    <h1>Team 6</h1>
-    
+    <nav class="navbar navbar-expand-lg navbar-dark special-color-dark">
+      <a class="navbar-brand text-uppercase" href="/"><strong>Method</strong></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link text-uppercase" href="/shop">Catalog <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-uppercase" href="/intro">Team Introduction</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-uppercase" href="/doc">Documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-uppercase" href="/all">All Products</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+                {% if is_logged_in %}
+        <button  type="button" class="btn btn-white">Logout</button>
+    {% else %}
+        <button  type="button" class="btn btn-white">Login</button>
+    {% endif %}
+          </li>
+   
+        </ul>
+      </div>
+    </nav>
+  
+  </header>
+
 {% block content %}    
 {% endblock %}
     
-    <h3>MethodPro 2019 </h3>
-
+   
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.2/js/mdb.min.js"></script>
 </body>
 </html>
